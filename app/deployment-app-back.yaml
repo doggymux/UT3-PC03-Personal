@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: back-pps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: back-pps
+  template:
+    metadata:
+      labels:
+        app: back-pps
+    spec:
+      containers:
+      - name: back-pps
+        image: doggymux/back-pps:2.1
+        ports:
+        - containerPort: 7080
