@@ -2,12 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-service
+  labels:
+    app: frontend
 spec:
   selector:
     app: frontend
   ports:
-  - name: http
-    protocol: TCP
+  - name: service-front-pps
     port: 80
-    targetPort: 80
   type: NodePort

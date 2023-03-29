@@ -6,8 +6,7 @@ spec:
   selector:
     app: back-pps
   ports:
-  - name: http
-    protocol: TCP
+  - name: service-back-pps
     port: 7080
-    targetPort: postgres
+    nodePort: 30780
   type: NodePort

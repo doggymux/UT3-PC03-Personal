@@ -14,21 +14,20 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:10.4
+          image: postgres:latest
           imagePullPolicy: "IfNotPresent"
-          env:
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: secret-dev
-                  key: username
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: secret-dev
-                  key: password
-            - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: postgres_db      
+          envFrom:
+            - secretRef:
+                name: secret-dev
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgresql
+            - mountPath: /docker-entrypoint-initdb.d
+              name: init-script
+      volumes:
+        - name: postgresql
+          persistentVolumeClaim:
+            claimName: bdd-pvc
+        - name: init-script
+          configMap:
+            name: postgres-config

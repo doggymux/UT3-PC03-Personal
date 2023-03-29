@@ -17,3 +17,4 @@ spec:
         image: doggymux/front-pps:1
         ports:
         - containerPort: 80
+          name: billingappfport

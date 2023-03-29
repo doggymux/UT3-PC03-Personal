@@ -6,30 +6,11 @@ metadata:
     app: postgres
 data:
   postgres_db: billingapp_db
-  postgres_init: |
+  postgres_init.sh: |-
     #!/bin/bash
-
-    # cambiar al usuario postgres
-    sudo -u postgres bash << EOF
-
-    # conectarse al motor de base de datos
-    psql -c "SELECT 1;" || exit 1
-
-    # crear un usuario y contraseña
-    username=\$(echo \$POSTGRES_USER | base64 -d)
-    password=\$(echo \$POSTGRES_PASSWORD | base64 -d)
-    psql -c "CREATE USER \$username WITH PASSWORD '\$password';"
-
-    # crear una base de datos
-    dbname=\$(echo \$POSTGRES_DB | base64 -d)
-    psql -c "CREATE DATABASE \$dbname;"
-
-    # conceder privilegios al usuario
-    psql -c "GRANT ALL PRIVILEGES ON DATABASE \$dbname TO \$username;"
-
-    "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
-    CREATE USER docker WITH PASSWORD '\$password';
-    CREATE DATABASE docker;
-    GRANT ALL PRIVILEGES ON DATABASE docker TO docker;
+    set -e
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+      CREATE USER billingapp WITH PASSWORD 'qwerty';
+      CREATE DATABASE billingapp_db;
+      GRANT ALL PRIVILEGES ON DATABASE billingapp_db TO billingapp;
     EOSQL 
-    EOF

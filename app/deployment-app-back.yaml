@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: back-pps
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: back-pps
@@ -17,3 +17,4 @@ spec:
         image: doggymux/back-pps:2.1
         ports:
         - containerPort: 7080
+          name: billingappbport
