@@ -12,7 +12,7 @@ Primero configuraremos todo lo referente a la base de datos y la pagina que util
 
 ### Encriptación de la información
 
-Dentro de nuestra configuración tenemos que generar unos ficheros secrets los cuales nos permitiran tener la información sensible de forma oculta/encriptada lo que permitira mantener la información sensible en nuestro servidor. 
+Dentro de nuestra configuración tenemos que generar unos ficheros secrets los cuales nos permitirán tener la información sensible de forma oculta/encriptada por lo que se protegeremos la información sensible en nuestro servidor de kubernetes. 
 
 La información que encriptaremos será la de acceso a postgres y a la plataforma de pgadmin.
 
@@ -49,7 +49,7 @@ data:
 
 ### Persistencia
 
-Para realizar la persistencia primero deberemos de crear los recursos que utilizaremos en kubernetes para poder crear esta, para ello generaremos un pv y pvc los cuales añadiremos posteriormente al deployment de postgres para crear la persistencia de este.
+Para realizar la persistencia primero deberemos de crear los recursos que utilizaremos en kubernetes. Para poder crear esta generaremos un pv y pvc los cuales añadiremos posteriormente al deployment de postgres para crear la persistencia de este.
 
 ```yaml
 apiVersion: v1
@@ -87,7 +87,7 @@ spec:
 
 ### Configmap
 
-Creamos el configmap el cual tendra un script de inicialización que utilizaremos para crear el usuario de BDD que necesitamos para que la aplicación funcione.
+Creamos el configmap el cual tendrá un script de inicialización que utilizaremos para crear el usuario de BDD que necesitamos para que la aplicación funcione.
 
 ```yaml
 apiVersion: v1
@@ -110,7 +110,7 @@ data:
 
 ### Deployments
 
-Para la parte de pgadmin y postgres deberemos de realizar los deployments de las aplicaciones mencionadas, para ello deberemos de configurarlos por separado y en el caso de postgres configuraremos los volumenes persistentes.
+Para la parte de pgadmin y postgres deberemos de realizar los deployments de las aplicaciones mencionadas, empezamos generando el deployment de pgadmin. En este deployment simplemente deberemos de establecer las variables de entorno que utilizaremos para el usuario y contraseña creados anteriormente en el secret.
 
 ```yaml
 apiVersion: apps/v1
@@ -150,7 +150,7 @@ spec:
             name: secret-pgadmin
 ```
 
-En el caso del deployment de postgres definimos los volumenes que utilizaremos, en este caso definimos dos volumenes los cuales son el configmap creado anteriormente y el volumen persistente que utilizaremos para la persistencia de la base de datos.
+En el caso del deployment de postgres definimos los volúmenes que utilizaremos los cuales son el configmap creado anteriormente y el volumen persistente que utilizaremos para la persistencia de la base de datos.
 
 ```yaml
 apiVersion: apps/v1
@@ -207,7 +207,7 @@ spec:
   type: ClusterIP
 ```
 
-Sabiendo que posteriormente esta base de datos tendrá que tener conexión con un docker que vamos a levantar el cual contendrá una aplicación en java la configuraremos como nodeport y establecemos los puertos necesarios y la IP para que se realicen la conexión.
+Sabiendo que posteriormente esta base de datos tendrá que tener conexión con un Docker que vamos a levantar establecemos el service como nodeport y establecemos los puertos necesarios y la IP para que se realicen la conexión. Este Docker contendrá una aplicación en java la cual nos dan para su despliegue.
 
 ```yaml
 apiVersion: v1
